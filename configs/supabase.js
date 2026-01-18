@@ -22,6 +22,6 @@ async function test() {
   console.log({ data, error });
 }
 
-test();
+// test();
 
 export default supabaseClient;
