@@ -7,13 +7,60 @@ const authRouter = express.Router();
 
 
 // POST REQUESTS
-authRouter.post('/register', ( req, res ) => {
-    res.json("add new user route reached")
+authRouter.post('/register', async ( req, res ) => {
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: req.body.email,
+        password: req.body.password,
+        options: {
+            data: {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName
+            }
+        }
+    })
+
+    if( error ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: "Failed to register new user",
+            error: error
+        })
+    }
+    else {
+        res.status(200).json({
+            success: true,
+            status: 200,
+            message: "User registered successfully",
+            data: data
+        })
+    }
+
 })
 
 
-authRouter.post('/login', ( req, res ) => {
-    res.json("login route")
+authRouter.post('/login', async ( req, res ) => {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: req.body.email,
+        password: req.body.password
+    })
+
+    if( error ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: "Failed to login user",
+            error: error
+        })
+    }
+    else {
+        res.status(200).json({
+            success: true,
+            status: 200,
+            message: "User logged in successfully",
+            data: data
+        })
+    }
 })
 
 
