@@ -144,12 +144,6 @@ authRouter.post('/reset-password', async ( req, res ) => {
 })
 
 
-
-
-
-
-
-
 // GET Requests
 authRouter.get('/current-user', async ( req, res ) => {
     const { data: { user } } = await supabaseClient.auth.getUser()
@@ -181,8 +175,6 @@ authRouter.get('/current-user', async ( req, res ) => {
         })
     }
 })
-
-
 
 
 // PUT REQUESTS
