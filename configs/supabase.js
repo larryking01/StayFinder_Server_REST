@@ -11,7 +11,12 @@ if (!process.env.STAY_FINDER_SERVICE_ROLE_KEY) {
 
 const supabaseClient = createClient(
   process.env.STAYFINDER_PROJECT_URL,
-  process.env.STAY_FINDER_SERVICE_ROLE_KEY
+  process.env.STAY_FINDER_SERVICE_ROLE_KEY,
+  {
+    auth: {
+      persistSession: false
+    }
+  }
 );
 
 async function test() {
