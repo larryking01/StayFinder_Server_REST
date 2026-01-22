@@ -1,4 +1,4 @@
-import supabaseClient from "../configs/supabase.js";
+import supabasePublic from "../configs/supabase.public.js";
 import express from 'express';
 
 
@@ -13,7 +13,7 @@ authRouter.post('/register', async ( req, res ) => {
     let email = req.body.email
     let password = req.body.password
 
-    const { data, error } = await supabaseClient.auth.signUp({
+    const { data, error } = await supabasePublic.auth.signUp({
         email: email,
         password: password,
         options: {
@@ -48,7 +48,7 @@ authRouter.post('/login', async ( req, res ) => {
     let email = req.body.email
     let password = req.body.password
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
+    const { data, error } = await supabasePublic.auth.signInWithPassword({
         email: email,
         password: password
     })
@@ -73,7 +73,7 @@ authRouter.post('/login', async ( req, res ) => {
 
 
 authRouter.post('/logout', async ( req, res ) => {
-    const { error } = await supabaseClient.auth.signOut()
+    const { error } = await supabasePublic.auth.signOut()
 
     if( error ) {
         res.status(500).json({
@@ -96,7 +96,7 @@ authRouter.post('/logout', async ( req, res ) => {
 authRouter.post('/send-password-reset-link', async ( req, res ) => {
     let email = req.body.email
 
-    const { data, error } = await supabaseClient.auth.resetPasswordForEmail( email, {
+    const { data, error } = await supabasePublic.auth.resetPasswordForEmail( email, {
         redirectTo: 'redirect link here'
     })
     if( error ) {
@@ -121,7 +121,7 @@ authRouter.post('/send-password-reset-link', async ( req, res ) => {
 authRouter.post('/reset-password', async ( req, res ) => {
     let password = req.body.password
 
-    const { data, error } = await supabaseClient.auth.updateUser({
+    const { data, error } = await supabasePublic.auth.updateUser({
         password: password
     })
 
@@ -144,15 +144,9 @@ authRouter.post('/reset-password', async ( req, res ) => {
 })
 
 
-
-
-
-
-
-
 // GET Requests
 authRouter.get('/current-user', async ( req, res ) => {
-    const { data: { user } } = await supabaseClient.auth.getUser()
+    const { data: { user } } = await supabasePublic.auth.getUser()
     
     try {
         if(!user) {
@@ -183,8 +177,6 @@ authRouter.get('/current-user', async ( req, res ) => {
 })
 
 
-
-
 // PUT REQUESTS
 authRouter.put('/update-user-details', async ( req, res ) => {
     let firstName = req.body.firstName
@@ -192,7 +184,7 @@ authRouter.put('/update-user-details', async ( req, res ) => {
     let email = req.body.email
     let password = req.body.password
 
-    const { data, error } = await supabaseClient.auth.updateUser({
+    const { data, error } = await supabasePublic.auth.updateUser({
         email: email,
         password: password,
         data: {

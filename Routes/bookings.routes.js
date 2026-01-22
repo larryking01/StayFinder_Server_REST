@@ -1,4 +1,3 @@
-import supabaseClient from "../configs/supabase.js";
 import express from 'express';
 
 

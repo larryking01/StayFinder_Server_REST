@@ -9,9 +9,9 @@ if (!process.env.STAY_FINDER_SERVICE_ROLE_KEY) {
   throw new Error('SERVICE ROLE KEY is missing');
 }
 
-const supabaseClient = createClient(
+const supabasePublic = createClient(
   process.env.STAYFINDER_PROJECT_URL,
-  process.env.STAY_FINDER_SERVICE_ROLE_KEY,
+  process.env.STAYFINDER_ANON_KEY,
   {
     auth: {
       persistSession: false
@@ -20,7 +20,7 @@ const supabaseClient = createClient(
 );
 
 async function test() {
-  const { data, error } = await supabaseClient
+  const { data, error } = await supabasePublic
     .from('users')
     .select('*');
 
@@ -29,4 +29,4 @@ async function test() {
 
 // test();
 
-export default supabaseClient;
+export default supabasePublic;
