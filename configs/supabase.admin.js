@@ -1,17 +1,22 @@
 import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
-if (!process.env.STAYFINDER_PROJECT_URL) {
+
+
+let stayFinderProjectURL = process.env.STAYFINDER_PROJECT_URL
+let stayFinderServiceRoleKey = process.env.STAY_FINDER_SERVICE_ROLE_KEY
+
+if (!stayFinderProjectURL) {
   throw new Error('STAYFINDER_PROJECT_URL is missing');
 }
 
-if (!process.env.STAY_FINDER_SERVICE_ROLE_KEY) {
+if (!stayFinderServiceRoleKey) {
   throw new Error('SERVICE ROLE KEY is missing');
 }
 
 const supabaseAdmin = createClient(
-  process.env.STAYFINDER_PROJECT_URL,
-  process.env.STAY_FINDER_SERVICE_ROLE_KEY,
+  stayFinderProjectURL,
+  stayFinderServiceRoleKey,
   {
     auth: {
       persistSession: false
