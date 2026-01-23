@@ -2,8 +2,6 @@ import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 
 
-
-
 let stayFinderProjectURL = process.env.STAYFINDER_PROJECT_URL
 let stayFinderAnonymousKey = process.env.STAYFINDER_ANON_KEY
 
@@ -15,29 +13,22 @@ if (!stayFinderAnonymousKey) {
   throw new Error('SERVICE ANONYMOUS KEY is missing');
 }
 
-const supabaseUser = createClient(
-  stayFinderProjectURL,
-  stayFinderAnonymousKey,
-  {
-    auth: {
-      persistSession: false
-    },
-    global: {
+
+function createUserSupabaseClient( req ) {
+  return createClient(
+    stayFinderProjectURL,
+    stayFinderAnonymousKey,
+    {
+      auth: {
+        persistSession: false
+      },
+      global: {
         headers: {
-            Authorization: request.headers.authorization
-        }
+          Authorization: req.headers.authorization       
+       }
+      }
     }
-  }
-);
-
-async function test() {
-  const { data, error } = await supabaseUser
-    .from('users')
-    .select('*');
-
-  console.log({ data, error });
+  )
 }
 
-// test();
-
-export default supabaseUser;
+export default createUserSupabaseClient;
