@@ -8,10 +8,9 @@ const bookingsRouter = express.Router();
 
 // POST requests
 bookingsRouter.post('/add-new-booking', async ( req, res ) => {
-    let supabaseUser = createUserSupabaseClient( req )
-    console.log(req.headers.authorization)
-
     try {
+        let supabaseUser = createUserSupabaseClient( req )
+        
         let bookingData = {
             currency: req.body.currency,
             customer_id: req.body.customer_id,
@@ -63,32 +62,156 @@ bookingsRouter.post('/add-new-booking', async ( req, res ) => {
 
 
 // GET requests
-bookingsRouter.get('/user-bookings/:user', ( req, res ) => {
-    res.json("user bookings route reached")
+bookingsRouter.get('/user-bookings/:customerID', async ( req, res ) => {
+    try {
+        let supabaseUser = createUserSupabaseClient( req )
+        let customerID = req.params.customerID
+
+        const { data, error } = await supabaseUser.from('Bookings').select('*').eq('customer_id', customerID)
+
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: 'Failed to fetch user bookings...',
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: 'User bookings fetched successfully...',
+                data: data
+            })
+        }
+
+    }
+    catch( err ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Internal server error...',
+            error: err
+        })
+    }
 })
 
 
-bookingsRouter.get('/find-booking/:bookingID', ( req, res ) => {
-    res.json("target booking route reached")
-})
 
+bookingsRouter.get('/booking-details/:bookingID', async ( req, res ) => {
+    try {
+        let supabaseUser = createUserSupabaseClient( req )
+        let bookingID = req.params.bookingID
 
+        const { data, error } = await supabaseUser.from('Bookings').select('*').eq('id', bookingID).single()
 
-// PUT requests
-bookingsRouter.put('/update-booking/:bookingID', ( req, res ) => {
-    res.json("update booking route reached")
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: 'Failed to fetch booking details...',
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: 'Booking details fetched successfully...',
+                data: data
+            })
+        }
+
+    }
+    catch( err ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Internal server error...',
+            error: err
+        })
+    }
 })
 
 
 
 // DELETE requests
-bookingsRouter.delete('/cancel-booking/:bookingID', ( req, res ) => {
-    res.json("delete booking route reached")
+bookingsRouter.delete('/cancel-booking/:bookingID', async ( req, res ) => {
+    try {
+        let supabaseUser = createUserSupabaseClient( req )
+        let bookingID = req.params.bookingID
+
+        const { data, error } = await supabaseUser.from('Bookings').delete().eq('id', bookingID).select()
+
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: 'Failed to delete booking...',
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: 'Booking deleted successfully...',
+                data: data
+            })
+        }
+
+    }
+    catch( err ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Internal server error...',
+            error: err
+        })
+    }
 })
 
 
-bookingsRouter.delete('/cancel-all-bookings', ( req, res ) => {
-    res.json("delete all bookings route reached")
+bookingsRouter.delete('/cancel-all-bookings/:customerID', async ( req, res ) => {
+    try {
+        let customerID = req.params.customerID 
+        let supabaseUser = createUserSupabaseClient( req )
+
+        const { data, error } = await supabaseUser.from('Bookings').delete().eq('customer_id', customerID).select()
+
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: 'Failed to delete all bookings...',
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: 'All bookings deleted successfully...',
+                data: data
+            })
+        }
+
+    }
+    catch( err ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: 'Internal server error...',
+            error: err
+        })
+    }
+})
+
+
+// PUT requests
+bookingsRouter.put('/update-booking/:bookingID', ( req, res ) => {
+    res.json("update booking route reached")
 })
 
 
