@@ -8,36 +8,46 @@ const authRouter = express.Router();
 
 // POST REQUESTS
 authRouter.post('/register', async ( req, res ) => {
-    let firstName = req.body.firstName
-    let lastName = req.body.lastName
-    let email = req.body.email
-    let password = req.body.password
+    try {
+        let firstName = req.body.firstName
+        let lastName = req.body.lastName
+        let email = req.body.email
+        let password = req.body.password
 
-    const { data, error } = await supabasePublic.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-            data: {
-                firstName: firstName,
-                lastName: lastName
+        const { data, error } = await supabasePublic.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    firstName: firstName,
+                    lastName: lastName
+                }
             }
-        }
-    })
+        })
 
-    if( error ) {
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to register new user...",
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "User registered successfully...",
+                data: data
+            })
+        }
+    }
+    catch ( err ) {
         res.status(500).json({
             success: false,
             status: 500,
-            message: "Failed to register new user",
-            error: error
-        })
-    }
-    else {
-        res.status(200).json({
-            success: true,
-            status: 200,
-            message: "User registered successfully",
-            data: data
+            message: "Internal server error...",
+            error: err
         })
     }
 
@@ -45,100 +55,140 @@ authRouter.post('/register', async ( req, res ) => {
 
 
 authRouter.post('/login', async ( req, res ) => {
-    let email = req.body.email
-    let password = req.body.password
+    try {
+        let email = req.body.email
+        let password = req.body.password
 
-    const { data, error } = await supabasePublic.auth.signInWithPassword({
-        email: email,
-        password: password
-    })
+        const { data, error } = await supabasePublic.auth.signInWithPassword({
+            email: email,
+            password: password
+        })
 
-    if( error ) {
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to login user...",
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "User logged in successfully",
+                data: data
+            })
+        }
+    }
+    catch( err ) {
         res.status(500).json({
             success: false,
             status: 500,
-            message: "Failed to login user",
-            error: error
-        })
-    }
-    else {
-        res.status(200).json({
-            success: true,
-            status: 200,
-            message: "User logged in successfully",
-            data: data
+            message: "Internal server error...",
+            error: err
         })
     }
 })
 
 
 authRouter.post('/logout', async ( req, res ) => {
-    const { error } = await supabasePublic.auth.signOut()
+    try {
+        const { error } = await supabasePublic.auth.signOut()
 
-    if( error ) {
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to terminate user session...",
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "User session terminated successfully",
+            })
+        }
+    }
+    catch( err ) {
         res.status(500).json({
             success: false,
             status: 500,
-            message: "Failed to login user",
-            error: error
-        })
-    }
-    else {
-        res.status(200).json({
-            success: true,
-            status: 200,
-            message: "Session terminated successfully",
+            message: "Internal server error...",
+            error: err
         })
     }
 })
 
 
 authRouter.post('/send-password-reset-link', async ( req, res ) => {
-    let email = req.body.email
+    try {
+        let email = req.body.email
 
-    const { data, error } = await supabasePublic.auth.resetPasswordForEmail( email, {
-        redirectTo: 'redirect link here'
-    })
-    if( error ) {
+        const { data, error } = await supabasePublic.auth.resetPasswordForEmail( email, {
+            redirectTo: 'redirect link here'
+        })
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to send password reset link",
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "Password reset link sent..",
+                data: data
+            })
+        }
+    }
+    catch( err ) {
         res.status(500).json({
             success: false,
             status: 500,
-            message: "Failed to send password reset link",
-            error: error
-        })
-    }
-    else {
-        res.status(200).json({
-            success: true,
-            status: 200,
-            message: "Password reset link sent..",
-            data: data
+            message: "Internal server error...",
+            error: err
         })
     }
 })
 
 
 authRouter.post('/reset-password', async ( req, res ) => {
-    let password = req.body.password
+    try {
+        let password = req.body.password
 
-    const { data, error } = await supabasePublic.auth.updateUser({
-        password: password
-    })
+        const { data, error } = await supabasePublic.auth.updateUser({
+            password: password
+        })
 
-    if( error ) {
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to reset user password",
+                error: error
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "Password reset successfully..",
+                data: data
+            })
+        }
+    }
+    catch( err ) {
         res.status(500).json({
             success: false,
             status: 500,
-            message: "Failed to reset user password",
-            error: error
-        })
-    }
-    else {
-        res.status(200).json({
-            success: true,
-            status: 200,
-            message: "Password reset successfully..",
-            data: data
+            message: "Internal server error...",
+            error: err
         })
     }
 })
@@ -146,9 +196,9 @@ authRouter.post('/reset-password', async ( req, res ) => {
 
 // GET Requests
 authRouter.get('/current-user', async ( req, res ) => {
-    const { data: { user } } = await supabasePublic.auth.getUser()
-    
     try {
+        const { data: { user } } = await supabasePublic.auth.getUser()
+
         if(!user) {
             res.status(200).json({
                 success: true,
@@ -179,34 +229,44 @@ authRouter.get('/current-user', async ( req, res ) => {
 
 // PUT REQUESTS
 authRouter.put('/update-user-details', async ( req, res ) => {
-    let firstName = req.body.firstName
-    let lastName = req.body.lastName
-    let email = req.body.email
-    let password = req.body.password
+    try {
+        let firstName = req.body.firstName
+        let lastName = req.body.lastName
+        let email = req.body.email
+        let password = req.body.password
 
-    const { data, error } = await supabasePublic.auth.updateUser({
-        email: email,
-        password: password,
-        data: {
-            firstName: firstName,
-            lastName: lastName
+        const { data, error } = await supabasePublic.auth.updateUser({
+            email: email,
+            password: password,
+            data: {
+                firstName: firstName,
+                lastName: lastName
+            }
+        })
+
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to update user details",
+                error: error
+            })
         }
-    })
-
-    if( error ) {
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "User details updated successfully...",
+                data: data
+            })
+        }
+    }
+    catch( err ) {
         res.status(500).json({
             success: false,
-            status: 500,
-            message: "Failed to update user details",
-            error: error
-        })
-    }
-    else {
-        res.status(200).json({
-            success: true,
             status: 200,
-            message: "User details updated successfully...",
-            data: data
+            message: "Error while trying to fetch current user",
+            error: error
         })
     }
 

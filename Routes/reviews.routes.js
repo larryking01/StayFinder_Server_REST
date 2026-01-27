@@ -130,13 +130,6 @@ reviewsRouter.get('/find-review/:reviewID', async ( req, res ) => {
 
 
 
-// PUT requests
-reviewsRouter.put('/update-review/:reviewID', ( req, res ) => {
-    res.json("update review route reached")
-})
-
-
-
 // DELETE requests
 reviewsRouter.delete('/delete-review/:reviewID', async ( req, res ) => {
     try {
@@ -175,6 +168,13 @@ reviewsRouter.delete('/delete-review/:reviewID', async ( req, res ) => {
 
 reviewsRouter.delete('/delete-all-reviews', ( req, res ) => {
     res.json("delete all reviews route reached")
+})
+
+
+
+// PUT requests
+reviewsRouter.put('/update-review/:reviewID', ( req, res ) => {
+    res.json("update review route reached")
 })
 
 
