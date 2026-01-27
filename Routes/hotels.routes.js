@@ -57,7 +57,7 @@ hotelsRouter.post('/add-new-hotel', async ( req, res ) => {
             isFeatured: req.body.isFeatured
         };
 
-        const { data, error } = await supabasePublic.from("Hotels").insert([ hotelData ]).select().single()
+        const { data, error } = await supabasePublic.from("Hotels").insert([ hotelData ]).select()
 
         if( error ) {
             console.log( error )
@@ -127,7 +127,7 @@ hotelsRouter.get('/get-all-hotels', async ( req, res ) => {
 hotelsRouter.get('/find-hotel/:hotelID',  async ( req, res ) => {
     try {
         const hotelID = req.params.hotelID
-        const { data, error } = await supabasePublic.from('Hotels').select('*').eq('id', hotelID).single()
+        const { data, error } = await supabasePublic.from('Hotels').select('*').eq('id', hotelID)
 
         if( error ) {
             res.status(500).json({

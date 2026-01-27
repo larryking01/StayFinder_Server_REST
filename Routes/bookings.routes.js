@@ -29,7 +29,7 @@ bookingsRouter.post('/add-new-booking', async ( req, res ) => {
             created_at: req.body.created_at
         }
 
-        const { data, error } = await supabaseUser.from("Bookings").insert([ bookingData ]).select().single()
+        const { data, error } = await supabaseUser.from("Bookings").insert([ bookingData ]).select()
 
         if( error ) {
             res.status(500).json({
@@ -104,7 +104,7 @@ bookingsRouter.get('/booking-details/:bookingID', async ( req, res ) => {
         let supabaseUser = createUserSupabaseClient( req )
         let bookingID = req.params.bookingID
 
-        const { data, error } = await supabaseUser.from('Bookings').select('*').eq('id', bookingID).single()
+        const { data, error } = await supabaseUser.from('Bookings').select('*').eq('id', bookingID)
 
         if( error ) {
             res.status(500).json({

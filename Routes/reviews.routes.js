@@ -26,7 +26,7 @@ reviewsRouter.post('/add-new-review', async ( req, res ) => {
             verified_stay: req.body.verified_stay,
         }
 
-        const { data, error } = await supabaseUser.from("Reviews").insert([ reviewData ]).select().single()
+        const { data, error } = await supabaseUser.from("Reviews").insert([ reviewData ]).select()
 
         if( error ) {
             res.status(500).json({
@@ -59,7 +59,7 @@ reviewsRouter.post('/add-new-review', async ( req, res ) => {
 
 
 // GET requests
-reviewsRouter.get('/get-reviews/:hotelID', async ( req, res ) => {
+reviewsRouter.get('/get-hotel-reviews/:hotelID', async ( req, res ) => {
     try {
         let hotelID = req.params.hotelID
         let supabaseUser = createUserSupabaseClient( req )
@@ -94,8 +94,38 @@ reviewsRouter.get('/get-reviews/:hotelID', async ( req, res ) => {
 })
 
 
-reviewsRouter.get('/find-review/:reviewID', ( req, res ) => {
-    res.json("target review route reached")
+reviewsRouter.get('/find-review/:reviewID', async ( req, res ) => {
+    try {
+        let reviewID = req.params.reviewID
+        let supabaseUser = createUserSupabaseClient( req )
+
+        const { data, error } = await supabaseUser.from("Reviews").select("*").eq("id", reviewID)
+
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to fetch review details...",
+                error: err
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "Successfully fetched review details...",
+                data: data
+            })
+        }
+    }
+    catch( err ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: "Internal server error...",
+            error: err
+        })
+    }
 })
 
 
@@ -108,8 +138,38 @@ reviewsRouter.put('/update-review/:reviewID', ( req, res ) => {
 
 
 // DELETE requests
-reviewsRouter.delete('/delete-review/:reviewID', ( req, res ) => {
-    res.json("delete review route reached")
+reviewsRouter.delete('/delete-review/:reviewID', async ( req, res ) => {
+    try {
+        let reviewID = req.params.reviewID
+        let supabaseUser = createUserSupabaseClient( req )
+
+        const { data, error } = await supabaseUser.from("Reviews").delete().eq('id', reviewID).select()
+
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to delete review...",
+                error: err
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "Successfully deleted review...",
+                data: data
+            })
+        }
+    }
+    catch( err ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: "Internal server error...",
+            error: err
+        })
+    }
 })
 
 
