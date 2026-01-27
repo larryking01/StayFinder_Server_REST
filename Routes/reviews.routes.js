@@ -59,8 +59,38 @@ reviewsRouter.post('/add-new-review', async ( req, res ) => {
 
 
 // GET requests
-reviewsRouter.get('/get-all-reviews', ( req, res ) => {
-    res.json("all reviews route")
+reviewsRouter.get('/get-reviews/:hotelID', async ( req, res ) => {
+    try {
+        let hotelID = req.params.hotelID
+        let supabaseUser = createUserSupabaseClient( req )
+
+        const { data, error } = await supabaseUser.from("Reviews").select("*").eq("hotel_id", hotelID)
+
+        if( error ) {
+            res.status(500).json({
+                success: false,
+                status: 500,
+                message: "Failed to fetch reviews for hotels...",
+                error: err
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                status: 200,
+                message: "Successfully fetched reviews for hotel...",
+                data: data
+            })
+        }
+    }
+    catch( err ) {
+        res.status(500).json({
+            success: false,
+            status: 500,
+            message: "Internal server error...",
+            error: err
+        })
+    }
 })
 
 
