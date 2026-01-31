@@ -5,6 +5,7 @@ import hotelsRouter from './Routes/hotels.routes.js';
 import authRouter from './Routes/auth.routes.js';
 import bookingsRouter from './Routes/bookings.routes.js';
 import reviewsRouter from './Routes/reviews.routes.js';
+import notificationsRouter from './Routes/notifications.routes.js';
 
 
 
@@ -24,6 +25,8 @@ app.use('/auth', authRouter)
 app.use('/bookings', bookingsRouter)
 
 app.use('/reviews', reviewsRouter)
+
+app.use('/notifications', notificationsRouter)
 
 // 404 handler
 app.use(( req, res ) => {
